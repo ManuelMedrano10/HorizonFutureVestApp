@@ -158,48 +158,8 @@ namespace Application.Services
             {
                 var listEntitiesQuery = _indicatorByCountryRepository.GetAllQuery();
 
-                var listEntitiesCountry = listEntitiesQuery.Include(ibc => ibc.Country).AsQueryable();
-
-                var listEntities = await listEntitiesCountry.Include(ibc => ibc.Macroindicator).ToListAsync();
-
-                var listEntityDtos = listEntities.Select(i =>
-                new IndicatorByCountryDto()
-                {
-                    Id = i.Id,
-                    IndicatorValue = i.IndicatorValue,
-                    Year = i.Year,
-                    CountryId = i.CountryId,
-                    Country = i.Country == null ? null : new CountryDto()
-                    {
-                        Id = i.Country.Id,
-                        Name = i.Country.Name,
-                        IsoCode = i.Country.IsoCode
-                    },
-                    MacroindicatorId = i.MacroindicatorId,
-                    Macroindicator = i.Macroindicator == null ? null : new MacroindicatorDto()
-                    {
-                        Id = i.Macroindicator.Id,
-                        Name = i.Macroindicator.Name,
-                        Weight = i.Macroindicator.Weight,
-                        BetterHigh = i.Macroindicator.BetterHigh
-                    }
-                }).ToList();
-
-                return listEntityDtos;
-            }
-            catch (Exception)
-            {
-                return [];
-            }
-        }
-
-        public async Task<List<IndicatorByCountryDto>> GetByYear(int year)
-        {
-            try
-            {
-                var listEntitiesQuery = _indicatorByCountryRepository.GetAllQuery();
-
-                var listEntities = await listEntitiesQuery.Where(ibc => ibc.Year == year).ToListAsync();
+                var listEntities = await listEntitiesQuery.Include(ibc => ibc.Macroindicator)
+                                                          .Include(ibc => ibc.Country).ToListAsync();
 
                 var listEntityDtos = listEntities.Select(i =>
                 new IndicatorByCountryDto()
@@ -232,13 +192,25 @@ namespace Application.Services
             }
         }
 
-        public async Task<List<IndicatorByCountryDto>> GetByCountry(int id)
+        public async Task<List<IndicatorByCountryDto>> GetFiltered(int? countryId, int? year)
         {
             try
             {
-                var listEntitiesQuery = _indicatorByCountryRepository.GetAllQuery();
+                var listQuery = _indicatorByCountryRepository.GetAllQuery()
+                                                             .Include(ibc => ibc.Macroindicator)
+                                                             .Include(ibc => ibc.Country).AsQueryable();
 
-                var listEntities = await listEntitiesQuery.Where(ibc => ibc.CountryId == id).ToListAsync();
+                if(countryId.HasValue && countryId.Value > 0)
+                {
+                    listQuery = listQuery.Where(i => i.CountryId == countryId.Value);
+                }
+
+                if (year.HasValue && year.Value > 0)
+                {
+                    listQuery = listQuery.Where(i => i.Year == year.Value);
+                }
+
+                var listEntities = await listQuery.ToListAsync();
 
                 var listEntityDtos = listEntities.Select(i =>
                 new IndicatorByCountryDto()

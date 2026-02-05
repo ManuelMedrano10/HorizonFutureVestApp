@@ -21,9 +21,13 @@ namespace HorizonFutureVestApp.Controllers
             _macroindicatorService = new MacroindicatorService(horizonDbContext);
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? countryId, int? year)
         {
-            var dtos = await _indicatorByCountryService.GetAllInclude();
+            ViewBag.Country = await _countryService.GetAll();
+            ViewBag.CurrentCountryId = countryId;
+            ViewBag.CurrentYear = year;
+
+            var dtos = await _indicatorByCountryService.GetFiltered(countryId, year);
 
             var listEntityVms = dtos.Select(ibc =>
                 new IndicatorByCountryViewModel()
@@ -166,70 +170,6 @@ namespace HorizonFutureVestApp.Controllers
 
             await _indicatorByCountryService.DeleteAsync(vm.Id);
             return RedirectToRoute(new { controller = "IndicatorByCountry", action = "Index" });
-        }
-
-        public async Task<IActionResult> GetByYear(int year)
-        {
-            ViewBag.Country = await _countryService.GetAll();
-            ViewBag.Macroindicator = await _macroindicatorService.GetAll();
-            var dtos = await _indicatorByCountryService.GetByYear(year);
-
-            var listByYearVms = dtos.Select(ibc =>
-                new IndicatorByCountryViewModel()
-                {
-                    Id = ibc.Id,
-                    IndicatorValue = ibc.IndicatorValue,
-                    Year = ibc.Year,
-                    CountryId = ibc.CountryId,
-                    Country = ibc.Country == null ? null : new CountryViewModel()
-                    {
-                        Id = ibc.Country.Id,
-                        Name = ibc.Country.Name,
-                        IsoCode = ibc.Country.IsoCode
-                    },
-                    MacroindicatorId = ibc.MacroindicatorId,
-                    Macroindicator = ibc.Macroindicator == null ? null : new MacroindicatorViewModel()
-                    {
-                        Id = ibc.Macroindicator.Id,
-                        Name = ibc.Macroindicator.Name,
-                        Weight = ibc.Macroindicator.Weight,
-                        BetterHigh = ibc.Macroindicator.BetterHigh
-                    }
-                }).ToList();
-
-            return View(listByYearVms);
-        }
-
-        public async Task<IActionResult> GetByCountry(int id)
-        {
-            ViewBag.Country = await _countryService.GetAll();
-            ViewBag.Macroindicator = await _macroindicatorService.GetAll();
-            var dtos = await _indicatorByCountryService.GetByCountry(id);
-
-            var listByCountryVms = dtos.Select(ibc =>
-                new IndicatorByCountryViewModel()
-                {
-                    Id = ibc.Id,
-                    IndicatorValue = ibc.IndicatorValue,
-                    Year = ibc.Year,
-                    CountryId = ibc.CountryId,
-                    Country = ibc.Country == null ? null : new CountryViewModel()
-                    {
-                        Id = ibc.Country.Id,
-                        Name = ibc.Country.Name,
-                        IsoCode = ibc.Country.IsoCode
-                    },
-                    MacroindicatorId = ibc.MacroindicatorId,
-                    Macroindicator = ibc.Macroindicator == null ? null : new MacroindicatorViewModel()
-                    {
-                        Id = ibc.Macroindicator.Id,
-                        Name = ibc.Macroindicator.Name,
-                        Weight = ibc.Macroindicator.Weight,
-                        BetterHigh = ibc.Macroindicator.BetterHigh
-                    }
-                }).ToList();
-
-            return View(listByCountryVms);
         }
     }
 }
