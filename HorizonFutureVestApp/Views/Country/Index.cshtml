@@ -1,5 +1,41 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<CountryViewModel>
 @{
+    ViewData["Title"] = "Countries";
 }
+
+<div class="text-center">
+    <h1 class="display-4">Countries</h1>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <a class="btn btn-outline-success" asp-controller="Country" asp-action="Create">+ Add New Country</a>
+    </div>
+</div>
+
+<div class="row mt-2">
+    @if(Model.Count == 0)
+    {
+        <div class="card text-center col-12 p-lg-5 bg-dark-subtle text-light">
+            <p class="display-5">There are not any countries added...</p>
+        </div>
+    }
+    else
+    {
+        foreach(var item in Model)
+        {
+            <div class="col-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Name: @item.Name</h5>
+                        <h6 class="card-subtitle">IsoCode: @item.IsoCode</h6>
+                        <div class="mt-2">
+                            <a class="btn btn-outline-warning float-end" asp-controller="Country" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a class="btn btn-outline-danger float-end me-2" asp-controller="Country" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

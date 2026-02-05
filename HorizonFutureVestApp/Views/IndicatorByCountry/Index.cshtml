@@ -1,5 +1,80 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<IndicatorByCountryViewModel>
 @{
+    ViewData["Title"] = "Indicators";
 }
+
+<div class="text-center">
+    <h1 class="display-4">Indicators By Country</h1>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <a class="btn btn-outline-success" asp-controller="IndicatorByCountry" asp-action="Create">+ Add New Indicator</a>
+    </div>
+</div>
+
+<!--<div class="row col-12">
+    <form asp-asp-controller="IndicatorByCountry" method="get">
+        <div class="col-auto">
+            <label asp-action="GetByCountry" class="form-label">Filter by countries</label>
+            @foreach(var item in Model)
+            {
+            <select asp-for="@item.CountryId" class="form-select">
+                <option value="0">Select any option</option>
+                    @if(ViewBag.Country != null)
+                    {
+                        foreach(var country in ViewBag.Country)
+                        {
+                            <option value="@country.Id">@country.Name</option>
+                        }
+                    }
+            </select>
+            }
+        </div>
+        <div class="col-auto">
+            @foreach (var item in Model)
+            {
+                <label asp-for="@item.Year" asp-action="GetByYear" class="form-label">Filter by countries</label>
+                <input asp-for="@item.Year" class="form-control" placeholder="Type the year to search"/>
+                <datalist id="@item.Year">
+                    @if (ViewBag.Country != null)
+                    {
+                        foreach (var option in Model)
+                        {
+                            <option value="@option.Year"></option>
+                        }
+                    }
+                </datalist>
+            }
+        </div>
+    </form>
+</div>-->
+
+<div class="row mt-2">
+    @if (Model.Count == 0)
+    {
+        <div class="card text-center col-12 p-lg-5 bg-dark-subtle text-light">
+            <p class="display-5">There are not any indicators added...</p>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="col-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Assigned Country: @(item.Country != null ? item.Country.Name : "")</h5>
+                        <h6 class="card-subtitle">Assigned Macroindicator: @(item.Macroindicator != null ? item.Macroindicator.Name : "")</h6>
+                        <p class="card-subtitle">Value: @item.IndicatorValue</p>
+                        <p class="card-text">Year: @item.Year</p>
+                        <div class="mt-2">
+                            <a class="btn btn-outline-warning float-end" asp-controller="IndicatorByCountry" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a class="btn btn-outline-danger float-end me-2" asp-controller="IndicatorByCountry" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -1,10 +1,8 @@
 ﻿using Application.Dtos.ReturnRate;
 using Application.Services;
-using Application.ViewModels.Macroindicator;
 using Application.ViewModels.ReturnRate;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Contexts;
-using Persistence.Entities;
 
 namespace HorizonFutureVestApp.Controllers
 {
@@ -17,43 +15,57 @@ namespace HorizonFutureVestApp.Controllers
             _returnRateService = new ReturnRateService(context);
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? message = null, string? messageType = null)
         {
-            ViewBag.EditMode = true;
             var dto = await _returnRateService.GetAsync();
 
-            if(dto == null)
+            SaveReturnRateViewModel vm;
+
+            if (dto != null)
             {
-                return View();
+                ViewBag.EditMode = true;
+                vm = new()
+                {
+                    Id = dto.Id,
+                    MaximumRate = dto.MaximumRate,
+                    MinimumRate = dto.MinimumRate
+                };
+
+                ViewBag.Message = message;
+                ViewBag.MessageType = messageType;
+                return View(vm);
             }
 
-            SaveReturnRateViewModel vm = new()
-            {
-                Id = dto.Id,
-                MaximumRate = dto.MaximumRate,
-                MinimumRate = dto.MinimumRate
-            };
+            ViewBag.Message = message;
+            ViewBag.MessageType = messageType;
 
-            return View(vm);
+            return View(new SaveReturnRateViewModel() { Id = 0, MaximumRate = 0, MinimumRate = 0 });
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(SaveReturnRateViewModel vm)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                ViewBag.EditMode = true;
-                return View(vm);
-            }
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.EditMode = true;
+                    return View(vm);
+                }
 
-            ReturnRateDto dto = new()
+                ReturnRateDto dto = new()
+                {
+                    Id = vm.Id,
+                    MaximumRate = vm.MaximumRate,
+                    MinimumRate = vm.MinimumRate
+                };
+                await _returnRateService.UpdateAsync(dto);
+                return RedirectToRoute(new { controller = "ReturnRate", action = "Index", message = "Product created successfully", messageType = "alert-success" });
+            } 
+            catch(Exception)
             {
-                Id = vm.Id,
-                MaximumRate = vm.MaximumRate,
-                MinimumRate = vm.MinimumRate
-            };
-            await _returnRateService.UpdateAsync(dto);
-            return RedirectToRoute(new { controller = "ReturnRate", action = "Index" });
+                return RedirectToRoute(new { controller = "ReturnRate", action = "Index" });
+            }
         }
     }
 }

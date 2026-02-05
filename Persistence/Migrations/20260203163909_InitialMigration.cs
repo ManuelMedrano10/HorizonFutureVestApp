@@ -45,7 +45,7 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    minimumRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MinimumRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MaximumRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>

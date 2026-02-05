@@ -158,7 +158,9 @@ namespace Application.Services
             {
                 var listEntitiesQuery = _indicatorByCountryRepository.GetAllQuery();
 
-                var listEntities = await listEntitiesQuery.Include(ibc => ibc.Country).ToListAsync();
+                var listEntitiesCountry = listEntitiesQuery.Include(ibc => ibc.Country).AsQueryable();
+
+                var listEntities = await listEntitiesCountry.Include(ibc => ibc.Macroindicator).ToListAsync();
 
                 var listEntityDtos = listEntities.Select(i =>
                 new IndicatorByCountryDto()

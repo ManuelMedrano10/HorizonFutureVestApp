@@ -1,5 +1,41 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model SaveMacroindicatorViewModel
 @{
+    bool editMode = ViewBag.EditMode ?? false;
+    ViewData["Title"] = "Macroindicator save";
 }
+
+<div class="col-12 col-md-6 offset-md-3 ">
+    <div class="card">
+        <div class="card-header bg-success text-light">
+            <h5 class="text-center">@(editMode ? "Edit - " + Model.Name : "New Asset")</h5>
+        </div>
+        <div class="card-body">
+            <form asp-controller="Macroindicator" asp-action="@(editMode ? "Edit" : "Create")" method="POST">
+                <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Name:</label>
+                    <input class="form-control" asp-for="Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Weight" class="form-label">Weight:</label>
+                    <input class="form-control" asp-for="Weight" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="BetterHigh" class="form-label">Is better:</label>
+                    <select asp-for="BetterHigh" class="form-select">
+                        <option value="">Select any option:</option>
+                        <option value="@true">High</option>
+                        <option value="@false">Low</option>
+                    </select>
+                    <span asp-validation-for="BetterHigh" class="text-danger"></span>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-dark text-light float-end">Save</button>
+                    <a asp-controller="Macroindicator" asp-action="Index" class="btn btn-outline-dark float-end me-2">Back to list</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

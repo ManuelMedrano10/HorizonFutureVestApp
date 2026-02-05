@@ -50,7 +50,9 @@ namespace Application.Services
             {
                 var macroindicatorsWeightSum = await _macroindicatorRepository.GetAllQuery().SumAsync(m => m.Weight);
 
-                if ((macroindicatorsWeightSum + dto.Weight) > 1)
+                var currentWeight = _macroindicatorRepository.GetAllQuery().FirstOrDefault(m => m.Id == dto.Id);
+
+                if ((macroindicatorsWeightSum + dto.Weight - currentWeight?.Weight) > 1)
                     return false;
 
                 Macroindicator entity = new()

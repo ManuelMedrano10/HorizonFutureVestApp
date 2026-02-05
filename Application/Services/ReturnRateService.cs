@@ -18,7 +18,7 @@ namespace Application.Services
             try
             {
                 if (dto.MinimumRate > dto.MaximumRate)
-                    return false;
+                    throw new Exception("The minimum rate must be less than the maximum rate.");
 
                 ReturnRate entity = new()
                 {
@@ -67,28 +67,6 @@ namespace Application.Services
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        public async Task<List<ReturnRateDto>> GetAll()
-        {
-            try
-            {
-                var listEntity = await _returnRateRepository.GetAllList();
-
-                var listEntityDtos = listEntity.Select(rr =>
-                    new ReturnRateDto()
-                    {
-                        Id = rr.Id,
-                        MinimumRate = rr.MinimumRate,
-                        MaximumRate = rr.MaximumRate
-                    }).ToList();
-
-                return listEntityDtos;
-            }
-            catch (Exception)
-            {
-                return [];
             }
         }
     }

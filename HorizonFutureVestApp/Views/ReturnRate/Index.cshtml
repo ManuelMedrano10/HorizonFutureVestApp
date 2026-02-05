@@ -4,6 +4,14 @@
 	ViewData["title"] = "Return Rates";
 }
 
+@if (!string.IsNullOrWhiteSpace(ViewBag.message))
+{
+    <div class="alert @ViewBag.MessageType alert-dismissible fade show" role="alert">
+        @ViewBag.Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="row">
 	<div class="text-center">
 		<h1 class="display-4">Return Rates</h1>
@@ -29,9 +37,9 @@
                         <input asp-for="MaximumRate" class="form-control" />
                         <span asp-validation-for="MaximumRate" class="text-danger"></span>
                     </div>
-                    <div>
+                    <div class="mt-2">
                         <button type="submit" class="btn btn-dark text-light float-end">Save</button>
-                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark float-end">Back To Home</a>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark float-end me-2">Back To Home</a>
                     </div>
                 </form>
             </div>

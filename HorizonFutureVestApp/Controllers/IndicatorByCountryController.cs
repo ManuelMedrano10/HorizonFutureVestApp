@@ -170,6 +170,8 @@ namespace HorizonFutureVestApp.Controllers
 
         public async Task<IActionResult> GetByYear(int year)
         {
+            ViewBag.Country = await _countryService.GetAll();
+            ViewBag.Macroindicator = await _macroindicatorService.GetAll();
             var dtos = await _indicatorByCountryService.GetByYear(year);
 
             var listByYearVms = dtos.Select(ibc =>
@@ -200,6 +202,8 @@ namespace HorizonFutureVestApp.Controllers
 
         public async Task<IActionResult> GetByCountry(int id)
         {
+            ViewBag.Country = await _countryService.GetAll();
+            ViewBag.Macroindicator = await _macroindicatorService.GetAll();
             var dtos = await _indicatorByCountryService.GetByCountry(id);
 
             var listByCountryVms = dtos.Select(ibc =>
