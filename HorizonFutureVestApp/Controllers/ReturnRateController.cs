@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.ReturnRate;
 using Application.Services;
+using Application.ViewModels.Macroindicator;
 using Application.ViewModels.ReturnRate;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Contexts;
@@ -16,21 +17,24 @@ namespace HorizonFutureVestApp.Controllers
             _returnRateService = new ReturnRateService(context);
         }
 
-        public /*async Task<*/IActionResult/*>*/ Index(/*int id*/)
+        public async Task<IActionResult> Index()
         {
-            /*ViewBag.EditMode = true;
-            var dto = await _returnRateService.GetById(id);
+            ViewBag.EditMode = true;
+            var dto = await _returnRateService.GetAsync();
+
             if(dto == null)
             {
-                return View(newVm);
+                return View();
             }
+
             SaveReturnRateViewModel vm = new()
             {
                 Id = dto.Id,
                 MaximumRate = dto.MaximumRate,
                 MinimumRate = dto.MinimumRate
-            };*/
-            return View();
+            };
+
+            return View(vm);
         }
 
         [HttpPost]

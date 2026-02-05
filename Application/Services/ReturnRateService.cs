@@ -30,6 +30,7 @@ namespace Application.Services
                 if(entity.Id == 0)
                 {
                     ReturnRate? newEntity = await _returnRateRepository.AddAsync(entity);
+                    return true;
                 }
 
                 ReturnRate? returnEntity = await _returnRateRepository.UpdateAsync(entity.Id, entity);
@@ -44,11 +45,12 @@ namespace Application.Services
             }
         }
 
-        public async Task<ReturnRateDto?> GetById(int id)
+        public async Task<ReturnRateDto?> GetAsync()
         {
             try
             {
-                var entity = await _returnRateRepository.GetById(id);
+                var listEntity = await _returnRateRepository.GetAllList();
+                var entity = listEntity.FirstOrDefault();
 
                 if (entity == null)
                     return null;
