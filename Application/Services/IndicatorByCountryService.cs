@@ -192,6 +192,45 @@ namespace Application.Services
             }
         }
 
+        public async Task<List<IndicatorByCountryDto>> GetByYear(int year)
+        {
+            try
+            {
+                var listEntitiesQuery = _indicatorByCountryRepository.GetAllQuery();
+
+                var listEntities = await listEntitiesQuery.Where(i => i.Year == year).ToListAsync();
+
+                var listEntityDtos = listEntities.Select(i =>
+                new IndicatorByCountryDto()
+                {
+                    Id = i.Id,
+                    IndicatorValue = i.IndicatorValue,
+                    Year = i.Year,
+                    CountryId = i.CountryId,
+                    Country = i.Country == null ? null : new CountryDto()
+                    {
+                        Id = i.Country.Id,
+                        Name = i.Country.Name,
+                        IsoCode = i.Country.IsoCode
+                    },
+                    MacroindicatorId = i.MacroindicatorId,
+                    Macroindicator = i.Macroindicator == null ? null : new MacroindicatorDto()
+                    {
+                        Id = i.Macroindicator.Id,
+                        Name = i.Macroindicator.Name,
+                        Weight = i.Macroindicator.Weight,
+                        BetterHigh = i.Macroindicator.BetterHigh
+                    }
+                }).ToList();
+
+                return listEntityDtos;
+            }
+            catch (Exception)
+            {
+                return [];
+            }
+        }
+
         public async Task<List<IndicatorByCountryDto>> GetFiltered(int? countryId, int? year)
         {
             try

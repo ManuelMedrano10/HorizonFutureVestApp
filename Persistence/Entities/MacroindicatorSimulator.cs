@@ -3,6 +3,6 @@
     public class MacroindicatorSimulator : Macroindicator
     {
         public required int MacroindicatorId { get; set; }
-        public Macroindicator? MacroindicatorType { get; set; }
+        public Macroindicator? Macroindicator { get; set; }
     }
 }

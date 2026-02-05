@@ -10,6 +10,7 @@ namespace Persistence.Entities
         public required bool BetterHigh { get; set; }
 
         //Navigation property
+        public ICollection<MacroindicatorSimulator>? MacroindicatorSimulators { get; set }
         public ICollection<IndicatorByCountry>? IndicatorsByCountries { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Contexts;
 
@@ -14,6 +15,11 @@ namespace HorizonFutureVestApp
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<HorizonDbContext>(opt => opt.UseSqlServer(connectionString));
+            builder.Services.AddScoped<RankingService>();
+            builder.Services.AddScoped<IndicatorByCountryService>();
+            builder.Services.AddScoped<CountryService>();
+            builder.Services.AddScoped<ReturnRateService>();
+            builder.Services.AddScoped<MacroindicatorService>();
 
             var app = builder.Build();
 

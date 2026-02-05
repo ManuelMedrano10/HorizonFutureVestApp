@@ -1,8 +1,74 @@
-﻿@{
+﻿@model List<RankingResultViewModel>
+@{
     ViewData["Title"] = "Home";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Horizon FutureVest</h1>
 </div>
+
+<div class="row justify-content-center mb-4">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body">
+                <form asp-action="Index" method="get">
+                    <label class="form-label fw-bold">Choose the year:</label>
+                    <select name="selectedYear" class="form-select" asp-items="ViewBag.Years" onchange="this.form.submit()">
+                        <option value="">-- Choose --</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Ranking Global @ViewBag.SelectedYear</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-center">CountryName</th>
+                        <th>IsoCode</th>
+                        <th>Score (0-100)</th>
+                        <th class="text-end">Return Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center fw-bold fs-5">@item.CountryName</td>
+                            <td>@item.IsoCode</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2">@item.Score</span>
+                                    <div class="progress flex-grow-1" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: @item.Score%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-end fw-bold text-success">@item.ReturnRate %</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else if (ViewBag.SelectedYear != null)
+{
+    <div class="alert alert-warning text-center">
+        There is not enough valid data registered in the year @ViewBag.SelectedYear to calculate the ranking.
+    </div>
+}
+else
+{
+    <div class="text-center text-muted mt-5">
+        <p>Por favor seleccione un año para ver el ranking oficial.</p>
+    </div>
+}
