@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="ViewModels\Country\DeleteCountryViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 

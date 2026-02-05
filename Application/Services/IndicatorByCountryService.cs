@@ -230,13 +230,13 @@ namespace Application.Services
             }
         }
 
-        public async Task<List<IndicatorByCountryDto>> GetByCountry(CountryDto dto)
+        public async Task<List<IndicatorByCountryDto>> GetByCountry(int id)
         {
             try
             {
                 var listEntitiesQuery = _indicatorByCountryRepository.GetAllQuery();
 
-                var listEntities = await listEntitiesQuery.Where(ibc => ibc.CountryId == dto.Id).ToListAsync();
+                var listEntities = await listEntitiesQuery.Where(ibc => ibc.CountryId == id).ToListAsync();
 
                 var listEntityDtos = listEntities.Select(i =>
                 new IndicatorByCountryDto()

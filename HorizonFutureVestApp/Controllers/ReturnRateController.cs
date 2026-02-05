@@ -16,52 +16,30 @@ namespace HorizonFutureVestApp.Controllers
             _returnRateService = new ReturnRateService(context);
         }
 
-        public async Task<IActionResult> Index()
+        public /*async Task<*/IActionResult/*>*/ Index(/*int id*/)
         {
-            var dtos = await _returnRateService.GetAll();
-
-            var listEntityVms = dtos.Select(rr =>
-                new ReturnRateViewModel()
-                {
-                    Id = rr.Id,
-                    MaximumRate = rr.MaximumRate,
-                    MinimumRate = rr.MinimumRate
-                }).ToList();
-
-            return View(listEntityVms);
-        }
-
-        public async Task<IActionResult> Configure(int id)
-        {
-            ViewBag.EditMode = true;
+            /*ViewBag.EditMode = true;
             var dto = await _returnRateService.GetById(id);
             if(dto == null)
             {
-                SaveReturnRateViewModel newVm = new()
-                {
-                    Id = 0,
-                    MaximumRate = 0,
-                    MinimumRate = 0
-                };
-
-                return View("Save", newVm);
+                return View(newVm);
             }
             SaveReturnRateViewModel vm = new()
             {
                 Id = dto.Id,
                 MaximumRate = dto.MaximumRate,
                 MinimumRate = dto.MinimumRate
-            };
-            return View("Save", vm);
+            };*/
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Configure(SaveReturnRateViewModel vm)
+        public async Task<IActionResult> Index(SaveReturnRateViewModel vm)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.EditMode = true;
-                return View("Save", vm);
+                return View(vm);
             }
 
             ReturnRateDto dto = new()
